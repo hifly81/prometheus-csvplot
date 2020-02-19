@@ -8,7 +8,7 @@ def GetMetricsNames(url):
     response = requests.get('{0}/api/v1/label/__name__/values'.format(url), verify=False)
     names = response.json()['data']
     # filter names based on input
-    with open('./metrics.txt') as input_metrics:
+    with open('./config/metrics.txt') as input_metrics:
         lines = input_metrics.read().splitlines()
     new_names = list(set(names) & set(lines))
     return new_names
@@ -17,7 +17,7 @@ def GetMetricsNames(url):
 def GetNamespace():
     # filter namespace
     lines = []
-    with open('./namespaces.txt') as input_namespace:
+    with open('./config/namespaces.txt') as input_namespace:
         lines = input_namespace.read().splitlines()
     return lines
 
@@ -52,7 +52,7 @@ for metricName in metricNames:
                 subl = []
                 ts_value = value_array[index]
                 t = datetime.utcfromtimestamp(float(ts_value))
-                metric_value = value_array[index + 1].replace('\'', "").strip()
+                metric_value = value_array[index + 1].replace('\'', "").replace("u","").strip()
                 index += 2
                 subl.append(t.strftime("%d/%m/%Y %H:%M:%S"))
                 subl.append(metric_value)
