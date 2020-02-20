@@ -6,7 +6,8 @@ from os import mkdir
 
 
 def GetMetricsNames(url):
-    response = requests.get('{0}/api/v1/label/__name__/values'.format(url), verify=False)
+    response = requests.get(
+        '{0}/api/v1/label/__name__/values'.format(url), verify=False)
     names = response.json()['data']
     # filter names based on input
     with open('./config/metrics.txt') as input_metrics:
@@ -36,16 +37,17 @@ new_folder = 'csv/performance_' + tsTitle
 mkdir(new_folder)
 
 for metricName in metricNames:
-    response = requests.get('{0}/api/v1/query_range'.format(sys.argv[1]), params={'query': metricName, 'start': sys.argv[2], 'end': sys.argv[3], 'step': '30s'}, verify=False)
+    response = requests.get('{0}/api/v1/query_range'.format(sys.argv[1]), params={
+                            'query': metricName, 'start': sys.argv[2], 'end': sys.argv[3], 'step': '30s'}, verify=False)
     results = response.json()['data']['result']
     for result in results:
-        l=[]
+        l = []
         metric_name = result['metric'].get("__name__", '')
-	namespace_name = result['metric'].get("namespace", '')
-	if namespace_name not in namespaces:
+        namespace_name = result['metric'].get("namespace", '')
+        if namespace_name not in namespaces:
             continue
-	service_name = result['metric'].get("service", '')
-	quantile_name = result['metric'].get("quantile", '')
+        service_name = result['metric'].get("service", '')
+        quantile_name = result['metric'].get("quantile", '')
         with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + '_' + quantile_name + "_" + '.csv', 'w') as file:
             writer = csv.writer(file)
             if writeHeader:
@@ -58,7 +60,8 @@ for metricName in metricNames:
                 subl = []
                 ts_value = value_array[index]
                 t = datetime.utcfromtimestamp(float(ts_value))
-                metric_value = value_array[index + 1].replace('\'', "").replace("u","").strip()
+                metric_value = value_array[index +
+                                           1].replace('\'', "").replace("u", "").strip()
                 index += 2
                 subl.append(t.strftime("%d/%m/%Y %H:%M:%S"))
                 subl.append(metric_value)

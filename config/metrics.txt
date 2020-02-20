@@ -1,3 +1,4 @@
 base_thread_count
 base_cpu_systemLoadAverage
 base_memory_usedHeap_bytes
+go_gc_duration_seconds

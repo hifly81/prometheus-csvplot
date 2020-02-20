@@ -1,0 +1,2 @@
+#!/bin/bash
+xvfb-run -a /tmp/orca-1.2.1-x86_64.AppImage "$@"
