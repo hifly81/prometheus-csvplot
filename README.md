@@ -7,12 +7,12 @@ Create a pdf report containing graphs from the csv files.
 ### Metrics config
 
 List of promethues metrics to be collected, must be listed into file:<br>
-config/metrics.txt
+*config/metrics.txt*
 
 ### Namespace config
 
 Metrics are filtered from a list of kubernetes namespaces; namespaces must be listed into file:<br> 
-config/namespace.txt
+*config/namespace.txt*
 
 
 ## Run on local machine
@@ -34,6 +34,8 @@ Example of usage:<br>
 python export_csv.py http://localhost:9090 2020-02-20T10:00:00Z 2020-02-20T10:30:00Z 
 ```
 
+A new directory named *csv/performance_<date>* with the csv files will be generated. 
+
 ### Create a pdf report with plots from csv files
 ```
 python plot.py <csv_directory>
@@ -43,6 +45,8 @@ Example of usage:<br>
 ```
 python plot.py csv/performance_2020-02-20_11:20:20 
 ```
+
+A new pdf file *report.pdf* will be generated in directory *csv/performance_<date>*
 
 
 ## Run as a Docker container
@@ -57,5 +61,5 @@ docker build -t perftest .
 docker run -i -t --device /dev/fuse --cap-add SYS_ADMIN perftest /bin/bash
 ```
 
-The workdir inside the container is: /tmp/perftest
+The workdir inside the container is: */tmp/perftest*
 

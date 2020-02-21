@@ -4,7 +4,7 @@ import sys
 from datetime import datetime
 from os import mkdir
 
-
+# filter metrics from the config file
 def GetMetricsNames(url):
     response = requests.get(
         '{0}/api/v1/label/__name__/values'.format(url), verify=False)
@@ -15,7 +15,7 @@ def GetMetricsNames(url):
     new_names = list(set(names) & set(lines))
     return new_names
 
-
+# collect kube namespaces from the config file
 def GetNamespace():
     # filter namespace
     lines = []
@@ -32,6 +32,7 @@ metricNames = GetMetricsNames(sys.argv[1])
 namespaces = GetNamespace()
 writeHeader = True
 now = datetime.now
+# Create performace directory with timestamp
 tsTitle = now().strftime('%Y-%m-%d-%H:%M:%S')
 new_folder = 'csv/performance_' + tsTitle
 mkdir(new_folder)
@@ -44,10 +45,12 @@ for metricName in metricNames:
         l = []
         metric_name = result['metric'].get("__name__", '')
         namespace_name = result['metric'].get("namespace", '')
+        # Check if metrics is from a listed namespaces
         if namespace_name not in namespaces:
             continue
         service_name = result['metric'].get("service", '')
         quantile_name = result['metric'].get("quantile", '')
+        # Create a csv file with the metric
         with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + '_' + quantile_name + "_" + '.csv', 'w') as file:
             writer = csv.writer(file)
             if writeHeader:
