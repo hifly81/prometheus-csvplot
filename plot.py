@@ -18,7 +18,7 @@ for file in glob.glob("*.csv"):
 imagelist = []
 indexImage = 0
 im1 = None
-for image in glob.glob("*.png"):
+for image in sorted(glob.glob("*.png")):
   imageOpen = Image.open(image)
   im = imageOpen.convert('RGB')
   if indexImage == 0:

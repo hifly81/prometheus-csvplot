@@ -12,6 +12,13 @@ RUN apt-get -y install libasound2
 # Add additional libs for python
 RUN pip install plotly
 
+# Add orca in PATH
+WORKDIR /tmp
+RUN wget 'https://github.com/plotly/orca/releases/download/v1.2.1/orca-1.2.1-x86_64.AppImage'
+RUN chmod +x /tmp/orca-1.2.1-x86_64.AppImage
+COPY files/orca /usr/bin/
+RUN chmod +x /usr/bin/orca
+
 # Create folder for prometheus-kube-csvplot application
 RUN mkdir -p /tmp/prometheus-kube-csvplot
 RUN mkdir -p /tmp/prometheus-kube-csvplot/config
@@ -23,11 +30,6 @@ COPY plot.py /tmp/prometheus-kube-csvplot
 COPY config/metrics.txt /tmp/prometheus-kube-csvplot/config
 COPY config/namespaces.txt /tmp/prometheus-kube-csvplot/config
 
-# Add orca in PATH
-WORKDIR /tmp
-RUN wget 'https://github.com/plotly/orca/releases/download/v1.2.1/orca-1.2.1-x86_64.AppImage'
-RUN chmod +x /tmp/orca-1.2.1-x86_64.AppImage
-COPY files/orca /usr/bin/
-RUN chmod +x /usr/bin/orca
+COPY csv/ /tmp/prometheus-kube-csvplot/csv/
 
 WORKDIR /tmp/prometheus-kube-csvplot
