@@ -58,16 +58,13 @@ for metricName in metricNames:
         metric_name = result['metric'].get("__name__", '')
         namespace_name = result['metric'].get("namespace", '')
         # Check if metrics is from a listed namespaces
-        if namespace_name not in namespaces:
+        if len(namespaces) > 0 and namespace_name not in namespaces:
             continue
-        service_name = result['metric'].get("service", '')
-        quantile_name = result['metric'].get("quantile", '')
-        exported_namespace_name = result['metric'].get("exported_namespace", '')
-        # Skip quantile
-        if quantile_name is not None:
-            continue
+        if len(namespaces) == 0:
+            namespace_name = "no_namespace"
         # Create a csv file with the metric
-        with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + "_" + exported_namespace_name + '.csv', 'w') as file:
+        service_name = result['metric'].get("service", '')
+        with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + "_" + '.csv', 'w') as file:
             writer = csv.writer(file)
             if writeHeader:
                 writer.writerow(['timestamp', 'value'])
@@ -79,8 +76,7 @@ for metricName in metricNames:
                 subl = []
                 ts_value = value_array[index]
                 t = datetime.utcfromtimestamp(float(ts_value))
-                metric_value = value_array[index +
-                                           1].replace('\'', "").replace("u", "").strip()
+                metric_value = value_array[index +1].replace('\'', "").replace("u", "").strip()
                 index += 2
                 subl.append(t.strftime("%d/%m/%Y %H:%M:%S"))
                 subl.append(metric_value)
