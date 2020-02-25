@@ -64,7 +64,8 @@ for metricName in metricNames:
             namespace_name = "no_namespace"
         # Create a csv file with the metric
         service_name = result['metric'].get("service", '')
-        with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + "_" + '.csv', 'w') as file:
+        exported_namespace = result['metric'].get("exported_namespace", '')
+        with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + "_" + exported_namespace + '.csv', 'w') as file:
             writer = csv.writer(file)
             if writeHeader:
                 writer.writerow(['timestamp', 'value'])
