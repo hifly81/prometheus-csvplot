@@ -51,15 +51,19 @@ A new pdf file *report.pdf* will be generated in directory *csv/performance_<dat
 
 ## Run as a Docker container
 
-### Create the Docker container
+### Pull the Docker Docker container
 ```
-docker build -t perftest .
+docker pull quay.io/bridlos/prometheus-kube-csvplot
 ```
 
 ### Run the Docker container
 ```
-docker run -i -t --device /dev/fuse --cap-add SYS_ADMIN perftest /bin/bash
+docker run -i -t --device /dev/fuse --cap-add SYS_ADMIN quay.io/bridlos/prometheus-kube-csvplot /bin/bash
 ```
 
-The workdir inside the container is: */tmp/perftest*
+The workdir inside the container is: */tmp/prometheus-kube-csvplot*
 
+### Create the Docker container
+```
+docker build -t prometheus-kube-csvplot .
+```

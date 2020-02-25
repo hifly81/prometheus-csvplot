@@ -10,7 +10,11 @@ def GetMetricsNames(url):
         '{0}/api/v1/label/__name__/values'.format(url), verify=False)
     names = response.json()['data']
     # filter names based on input
-    with open('./config/metrics.txt') as input_metrics:
+    metrics_file = 'metrics.txt'
+    if len(sys.argv) > 4:
+        metrics_file = sys.argv[4]
+
+    with open('./config/' + metrics_file) as input_metrics:
         lines = input_metrics.read().splitlines()
     new_names = list(set(names) & set(lines))
     return new_names
@@ -23,8 +27,15 @@ def GetNamespace():
         lines = input_namespace.read().splitlines()
     return lines
 
+def GetFilters():
+    # filter namespace
+    lines = []
+    with open('./config/filters.txt') as input_filters:
+        lines = input_filters.read().splitlines()
+    return lines
 
-if len(sys.argv) != 4:
+
+if len(sys.argv) < 4:
     print('Invalid number of parameters')
     sys.exit(1)
 
@@ -50,8 +61,12 @@ for metricName in metricNames:
             continue
         service_name = result['metric'].get("service", '')
         quantile_name = result['metric'].get("quantile", '')
+        exported_namespace_name = result['metric'].get("exported_namespace", '')
+        # Skip quantile
+        if quantile_name is not None:
+            continue
         # Create a csv file with the metric
-        with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + '_' + quantile_name + "_" + '.csv', 'w') as file:
+        with open(new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + "_" + exported_namespace_name + '.csv', 'w') as file:
             writer = csv.writer(file)
             if writeHeader:
                 writer.writerow(['timestamp', 'value'])

@@ -1,4 +1,4 @@
-from continuumio/anaconda3
+FROM continuumio/anaconda3
 
 # Add additional modules on debian
 RUN apt-get -y update
@@ -12,16 +12,16 @@ RUN apt-get -y install libasound2
 # Add additional libs for python
 RUN pip install plotly
 
-# Create folder for perftest application
-RUN mkdir -p /tmp/perftest
-RUN mkdir -p /tmp/perftest/config
-RUN mkdir -p /tmp/perftest/csv
+# Create folder for prometheus-kube-csvplot application
+RUN mkdir -p /tmp/prometheus-kube-csvplot
+RUN mkdir -p /tmp/prometheus-kube-csvplot/config
+RUN mkdir -p /tmp/prometheus-kube-csvplot/csv
 
-COPY export_csv.py /tmp/perftest
-COPY plot.py /tmp/perftest
+COPY export_csv.py /tmp/prometheus-kube-csvplot
+COPY plot.py /tmp/prometheus-kube-csvplot
 
-COPY config/metrics.txt /tmp/perftest/config
-COPY config/namespaces.txt /tmp/perftest/config
+COPY config/metrics.txt /tmp/prometheus-kube-csvplot/config
+COPY config/namespaces.txt /tmp/prometheus-kube-csvplot/config
 
 # Add orca in PATH
 WORKDIR /tmp
@@ -30,4 +30,4 @@ RUN chmod +x /tmp/orca-1.2.1-x86_64.AppImage
 COPY files/orca /usr/bin/
 RUN chmod +x /usr/bin/orca
 
-WORKDIR /tmp/perftest
+WORKDIR /tmp/prometheus-kube-csvplot
