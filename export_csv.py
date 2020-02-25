@@ -27,6 +27,7 @@ def GetNamespace():
         lines = input_namespace.read().splitlines()
     return lines
 
+# TODO add logic to filter metrics
 def GetFilters():
     # filter namespace
     lines = []

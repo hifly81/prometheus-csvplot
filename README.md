@@ -6,8 +6,11 @@ Create a pdf report containing graphs from the csv files.
 
 ### Metrics config
 
-List of promethues metrics to be collected, must be listed into file:<br>
-*config/metrics.txt*
+List of promethues metrics to be collected.<br>
+By default metrics are listed in file:<br>
+*config/metrics.txt* <br>
+If you want to use a custom metrics file, put it in config directory <br>
+e.g. *config/metrics_haproxy.txt*
 
 ### Namespace config
 
@@ -26,7 +29,7 @@ You need:
 
 ### Generate csv files from prometheus metrics
 ```
-python export_csv.py <prometheus_url> <dateStart RFC 3339> <dateEnd RFC 3339>
+python export_csv.py <prometheus_url> <dateStart RFC 3339> <dateEnd RFC 3339> <custom_metrics_file>
 ```
 
 Example of usage:<br>
