@@ -6,6 +6,7 @@
 /build/
 /bin/
 target/
+csv/performance_*
 
 *.class
 
