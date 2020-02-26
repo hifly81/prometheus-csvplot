@@ -29,3 +29,8 @@ for image in sorted(glob.glob("*.png")):
 
 # create a pdf file with all images generated
 im1.save(r'report.pdf',save_all=True, append_images=imagelist)
+
+# clean up images
+for file in os.listdir('.'):
+  if file.endswith('.png'):
+    os.remove(file)
