@@ -14,7 +14,8 @@ e.g. *config/metrics_haproxy.txt*
 ### Namespace config
 
 Metrics are filtered from a list of kubernetes namespaces; namespaces must be listed into file:<br>
-*config/namespace.txt*
+*config/namespace.txt*<br>
+If you don't want to filter metrics per namespace, leave the file namespace.txt empty.
 
 ## Run on local machine
 
