@@ -1,2 +1,2 @@
+rate(go_gc_duration_seconds[5m])
 scrape_duration_seconds
-go_gc_duration_seconds

@@ -7,9 +7,6 @@ from os import mkdir
 
 # filter metrics from the config file
 def get_metrics_name(url):
-    response = requests.get(
-        '{0}/api/v1/label/__name__/values'.format(url), verify=False)
-    names = response.json()['data']
     # filter names based on input
     metrics_file = 'metrics.txt'
     if len(sys.argv) > 4:
@@ -17,7 +14,7 @@ def get_metrics_name(url):
 
     with open('./config/' + metrics_file) as input_metrics:
         lines = input_metrics.read().splitlines()
-    new_names = list(set(names) & set(lines))
+    new_names = list(set(lines))
     return new_names
 
 # collect kube namespaces from the config file
@@ -60,12 +57,12 @@ new_folder = 'csv/performance_' + tsTitle
 mkdir(new_folder)
 
 for metricName in metricNames:
+    print('exported metric name:' + metricName)
     response = requests.get('{0}/api/v1/query_range'.format(prometheus_url), params={
                             'query': metricName, 'start': sys.argv[2], 'end': sys.argv[3], 'step': '30s'}, verify=False)
     results = response.json()['data']['result']
     for result in results:
         l = []
-        metric_name = result['metric'].get("__name__", '')
         namespace_name = result['metric'].get("namespace", '')
         # check if metrics is from a listed namespaces
         if len(namespaces) > 0 and namespace_name not in namespaces:
@@ -75,7 +72,7 @@ for metricName in metricNames:
         # create a csv file with the metric
         service_name = result['metric'].get("service", '')
         exported_namespace = result['metric'].get("exported_namespace", '')
-        csv_file_name = new_folder + '/' + metric_name + '_' + namespace_name + '_' + service_name + "_" + exported_namespace + '.csv'
+        csv_file_name = new_folder + '/' + metricName + '_' + namespace_name + '_' + service_name + "_" + exported_namespace + '.csv'
         with open(csv_file_name, 'w') as file:
             writer = csv.writer(file)
             if writeHeader:
