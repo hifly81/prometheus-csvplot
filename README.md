@@ -54,24 +54,3 @@ python plot.py csv/performance_2020-02-20_11:20:20
 
 A new pdf file *report.pdf* will be generated in directory *csv/performance_timestamp
 
-## Run as a Docker container
-
-### Pull the Docker Docker container
-
-```
-docker pull quay.io/bridlos/prometheus-kube-csvplot
-```
-
-### Run the Docker container
-
-```
-docker run -i -t --device /dev/fuse --cap-add SYS_ADMIN quay.io/bridlos/prometheus-kube-csvplot /bin/bash
-```
-
-The workdir inside the container is: */tmp/prometheus-kube-csvplot*
-
-### Create the Docker container
-
-```
-docker build -t prometheus-kube-csvplot .
-```
