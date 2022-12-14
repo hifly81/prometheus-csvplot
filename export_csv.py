@@ -17,13 +17,6 @@ def get_metrics_name(url):
     new_names = list(set(lines))
     return new_names
 
-# collect kube namespaces from the config file
-def get_namespaces():
-    # filter namespace
-    lines = []
-    with open('./config/namespaces.txt') as input_namespace:
-        lines = input_namespace.read().splitlines()
-    return lines
 
 # validate a url
 def check_url(url):
@@ -48,7 +41,6 @@ if check_url(prometheus_url) is None:
     sys.exit(1)
 
 metricNames = get_metrics_name(prometheus_url)
-namespaces = get_namespaces()
 writeHeader = True
 now = datetime.now
 # create performance directory with timestamp
@@ -63,16 +55,8 @@ for metricName in metricNames:
     results = response.json()['data']['result']
     for result in results:
         l = []
-        namespace_name = result['metric'].get("namespace", '')
-        # check if metrics is from a listed namespaces
-        if len(namespaces) > 0 and namespace_name not in namespaces:
-            continue
-        if len(namespaces) == 0:
-            namespace_name = "no_namespace"
         # create a csv file with the metric
-        service_name = result['metric'].get("service", '')
-        exported_namespace = result['metric'].get("exported_namespace", '')
-        csv_file_name = new_folder + '/' + metricName + '_' + namespace_name + '_' + service_name + "_" + exported_namespace + '.csv'
+        csv_file_name = new_folder + '/' + metricName + '.csv'
         with open(csv_file_name, 'w') as file:
             writer = csv.writer(file)
             if writeHeader:

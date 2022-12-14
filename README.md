@@ -11,11 +11,6 @@ By default metrics are listed in file:<br>
 If you want to use a custom metrics file, create it in config directory <br>
 e.g. *config/metrics_haproxy.txt*
 
-### Namespace config
-
-Metrics are filtered from a list of kubernetes namespaces; namespaces must be listed into file:<br>
-*config/namespace.txt*<br>
-If you don't want to filter metrics per namespace, leave the file namespace.txt empty.
 
 ## Run on local machine
 
