@@ -24,7 +24,7 @@ If you don't want to filter metrics per namespace, leave the file namespace.txt 
 You need:
 
     1. python v3
-    2. python modules: csv, requests, pandas, pillow, plotly, plotly-orca
+    2. python modules: csv, requests, pandas, pillow, plotly, plotly-orca, kaleido
 
 ### Generate csv files from prometheus metrics
 
