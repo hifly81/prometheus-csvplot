@@ -31,10 +31,10 @@ python export_csv.py <prometheus_url> <dateStart RFC 3339 | unix_timestamp> <dat
 Example of usage:
 
 ```
-python export_csv.py http://localhost:9090 2020-02-20T10:00:00Z 2020-02-20T10:30:00Z metrics.txt
+python export_csv.py http://localhost:9090 2022-12-14T10:00:00Z 2022-12-14T11:30:00Z metrics.txt
 ```
 
-A new directory named *csv/performance_timestamp with the csv files will be generated.
+A new directory named _csv/performance_timestamp_ with the csv files will be generated.
 
 ### Create a pdf report with plots from csv files
 
@@ -45,8 +45,8 @@ python plot.py <csv_directory>
 Example of usage:
 
 ```
-python plot.py csv/performance_2020-02-20_11:20:20
+python plot.py csv/performance_2022-12-14_11:20:20
 ```
 
-A new pdf file *report.pdf* will be generated in directory *csv/performance_timestamp
+A new pdf file *report.pdf* will be generated in directory _csv/performance_timestamp_
 
