@@ -28,7 +28,6 @@ COPY export_csv.py /tmp/prometheus-kube-csvplot
 COPY plot.py /tmp/prometheus-kube-csvplot
 
 COPY config/metrics.txt /tmp/prometheus-kube-csvplot/config
-COPY config/namespaces.txt /tmp/prometheus-kube-csvplot/config
 
 COPY csv/ /tmp/prometheus-kube-csvplot/csv/
 

@@ -5,8 +5,9 @@ import re
 from datetime import datetime
 from os import mkdir
 
+
 # filter metrics from the config file
-def get_metrics_name(url):
+def get_metrics_name():
     # filter names based on input
     metrics_file = 'metrics.txt'
     if len(sys.argv) > 4:
@@ -40,7 +41,7 @@ if check_url(prometheus_url) is None:
     print('Error passing argument <prometheus_url>: Invalid url format')
     sys.exit(1)
 
-metricNames = get_metrics_name(prometheus_url)
+metricNames = get_metrics_name()
 writeHeader = True
 now = datetime.now
 # create performance directory with timestamp
