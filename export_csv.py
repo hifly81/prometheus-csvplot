@@ -67,9 +67,15 @@ def main():
         results = response.json()['data']['result']
 
         for result in results:
-            l = []
+            title = metric_name
+            try:
+                value = result['metric']['__name__']
+                title = value
+            except:
+                pass
+
             # create a csv file with the metric
-            csv_file_name = new_folder + '/' + metric_name + '.csv'
+            csv_file_name = new_folder + '/' + title + '.csv'
             with open(csv_file_name, 'w') as file:
                 writer = csv.writer(file)
                 if write_header:
