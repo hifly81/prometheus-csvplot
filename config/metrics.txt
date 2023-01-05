@@ -1,3 +1,4 @@
 rate(go_gc_duration_seconds[5m])
 scrape_duration_seconds
 prometheus_http_request_duration_seconds_bucket{handler="/api/v1/query_range", instance="localhost:9090", job="prometheus", le="0.1"}
+sum(rate(http_server_requests_seconds_count{instance="application:8080", status!~"5.*"}[5m]))
