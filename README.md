@@ -2,28 +2,38 @@ Quickly run queries on prometheus and view results on csv and pdf reports with p
 
 ## Usage
 
-### Metrics config
+### Configuration
 
-This file contains a list of Prometheus metrics to be collected.
+A configuration file is required with a list of Prometheus metrics to be collected.
 
 By default, metrics are listed in file: _config/metrics.txt_
 
 If you want to use a custom metrics file, place it in config directory:
 e.g. _config/metrics_haproxy.txt_
 
+Example of a metrics config file:
 
-## Run on local machine
+```
+rate(go_gc_duration_seconds[5m])
+scrape_duration_seconds
+prometheus_http_request_duration_seconds_bucket{handler="/api/v1/query_range", instance="localhost:9090", job="prometheus", le="0.1"}
+sum(rate(http_server_requests_seconds_count{instance="application:8080", status!~"5.*"}[5m]))
+```
 
-Run prometheus and node exporter with _docker-compose_:
+## How to use
+
+You need a **prometheus** instance running.
+
+File _docker-compose_ in root folder can be used to run a prometheus instance on port 9090 and node exporter:
+
 ```
 docker-compose up -d 
 ```
 
 ### Generate csv files from prometheus metrics
 
-Prerequisites:
+This component is written in **python v3**, and you need some python libs to be installed on your local machine:
 
- - python v3 
  - python modules: _jproperties, requests, pandas, pillow, plotly, kaleido_
 
 you can install those with _pip3_:

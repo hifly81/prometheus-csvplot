@@ -19,3 +19,6 @@ services:
       - ./prometheus/prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
+  prometheus-csvplot:
+    image: prometheus-csvplot:latest
+    container_name: prometheus-csvplot

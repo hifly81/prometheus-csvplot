@@ -1,0 +1,6 @@
+jproperties
+requests
+pandas
+pillow
+plotly
+kaleido
