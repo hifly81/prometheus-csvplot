@@ -1,4 +1,4 @@
-Quickly run queries on prometheus and view results on csv and pdf reports with plots.
+Quickly run queries on prometheus and view results as csv files. Extract pdf reports with plots.
 
 ## Usage
 
