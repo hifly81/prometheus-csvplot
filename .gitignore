@@ -82,3 +82,10 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+######################
+# Python
+######################
+__pycache__/
+*.py[cod]
+*$py.class
