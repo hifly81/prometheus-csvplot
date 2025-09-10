@@ -64,7 +64,17 @@ def main():
         print('exported metric name:' + metric_name)
         response = requests.get('{0}/api/v1/query_range'.format(prometheus_url), params={
             'query': metric_name, 'start': sys.argv[2], 'end': sys.argv[3], 'step': '30s'}, verify=False)
-        results = response.json()['data']['result']
+        response_data = response.json()
+        
+        # Check if the response contains data, handle errors gracefully
+        if response_data.get('status') != 'success':
+            error_type = response_data.get('errorType', 'unknown')
+            error_msg = response_data.get('error', 'unknown error')
+            print(f'Warning: Query failed for metric "{metric_name}": {error_type} - {error_msg}')
+            continue
+            
+        # Extract results safely
+        results = response_data.get('data', {}).get('result', [])
 
         for result in results:
             title = metric_name
