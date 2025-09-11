@@ -39,6 +39,45 @@ def check_url(url):
     return re.match(regex, url)
 
 
+# validate date input - accepts RFC 3339 or unix timestamp
+def validate_date(date_string, parameter_name):
+    """
+    Validates date input to ensure it's either RFC 3339 format or unix timestamp.
+    
+    Args:
+        date_string (str): The date string to validate
+        parameter_name (str): Name of the parameter for error messages (e.g., 'start_date', 'end_date')
+    
+    Returns:
+        bool: True if date is valid, False otherwise
+    """
+    if not date_string:
+        print(f'Error: {parameter_name} cannot be empty')
+        return False
+    
+    # Try parsing as RFC 3339 format
+    try:
+        datetime.fromisoformat(date_string.replace('Z', '+00:00'))
+        return True
+    except ValueError:
+        pass
+    
+    # Try parsing as unix timestamp
+    try:
+        timestamp = float(date_string)
+        # Reasonable range check: between 1970 and year 2100
+        if 0 <= timestamp <= 4102444800:  # Jan 1, 2100
+            return True
+        else:
+            print(f'Error: {parameter_name} unix timestamp out of valid range (0 to 4102444800)')
+            return False
+    except ValueError:
+        pass
+    
+    print(f'Error: {parameter_name} must be in RFC 3339 format (e.g., "2022-12-14T10:00:00Z") or unix timestamp (e.g., "1671012000")')
+    return False
+
+
 def main():
     if len(sys.argv) < 4:
         print('Invalid number of arguments, a minimum of 3 arguments: <prometheus_url> <start_date> <end_date>')
@@ -48,6 +87,16 @@ def main():
     prometheus_url = sys.argv[1]
     if check_url(prometheus_url) is None:
         print('Error passing argument <prometheus_url>: Invalid url format')
+        sys.exit(1)
+
+    # validate start_date and end_date
+    start_date = sys.argv[2]
+    end_date = sys.argv[3]
+    
+    if not validate_date(start_date, 'start_date'):
+        sys.exit(1)
+    
+    if not validate_date(end_date, 'end_date'):
         sys.exit(1)
 
     metric_names = get_metrics_name()
