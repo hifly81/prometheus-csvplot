@@ -1,77 +1,177 @@
-Quickly run queries on prometheus and view results as csv files. Extract pdf reports with plots.
+# Prometheus CSV Plot
 
-## Usage
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python](https://img.shields.io/badge/python-v3.7-blue.svg)](https://www.python.org/downloads/)
 
-### Configuration
+A Python tool to quickly run queries on Prometheus, export results as CSV files, and generate PDF reports with visualized plots.
+
+## Features
+
+- 🔍 **Query Prometheus metrics** with configurable time ranges
+- 📊 **Export data to CSV** format for analysis
+- 📈 **Generate PDF reports** with automated plots and visualizations
+- 🐳 **Docker support** for easy deployment
+- ⚙️ **Flexible configuration** with custom metrics files
+- 🕐 **Multiple date formats** support (RFC 3339 and Unix timestamps)
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+  - [Starting Prometheus](#starting-prometheus)
+  - [Exporting CSV Data](#exporting-csv-data)
+  - [Generating PDF Reports](#generating-pdf-reports)
+- [Examples](#examples)
+- [Docker Usage](#docker-usage)
+- [Teardown](#teardown)
+- [License](#license)
+
+## Prerequisites
+
+- **Python 3.7+**
+- **Prometheus instance** (can be started using the provided Docker Compose)
+- Required Python packages (see [Installation](#installation))
+
+## Installation
+
+### Using pip
+
+Install the required Python dependencies:
+
+```bash
+pip3 install jproperties requests pandas pillow plotly kaleido
+```
+
+### Using requirements.txt
+
+```bash
+pip3 install -r requirements.txt
+```
+
+### Using Docker
+
+Build the Docker image:
+
+```bash
+docker build -t prometheus-csvplot .
+```
+
+## Configuration
+
+### Metrics Configuration
 
 A configuration file is required with a list of Prometheus metrics to be collected.
 
-By default, metrics are listed in file: _config/metrics.txt_
+**Default metrics file:** `config/metrics.txt`
 
-If you want to use a custom metrics file, place it in config directory:
-e.g. _config/metrics_haproxy.txt_
+**Custom metrics file:** Place your custom metrics file in the `config/` directory  
+Example: `config/metrics_haproxy.txt`
 
-Example of a metrics config file:
+### Example Metrics Configuration
 
-```
+Create or edit `config/metrics.txt`:
+
+```promql
 rate(go_gc_duration_seconds[5m])
 scrape_duration_seconds
 prometheus_http_request_duration_seconds_bucket{handler="/api/v1/query_range", instance="localhost:9090", job="prometheus", le="0.1"}
 sum(rate(http_server_requests_seconds_count{instance="application:8080", status!~"5.*"}[5m]))
 ```
 
-## How to use
+## Usage
 
-You need a **prometheus** instance running.
+### Starting Prometheus
 
-File _docker-compose_ in root folder can be used to run a prometheus instance on port 9090 and node exporter:
+Use the provided Docker Compose file to start a Prometheus instance with Node Exporter:
 
-```
-docker-compose up -d 
-```
-
-### Generate csv files from prometheus metrics
-
-This component is written in **python v3**, and you need some python libs to be installed on your local machine:
-
- - python modules: _jproperties, requests, pandas, pillow, plotly, kaleido_
-
-you can install those with _pip3_:
-
-```
-pip3 install jproperties requests pandas pillow plotly kaleido
+```bash
+docker-compose up -d
 ```
 
-### Generate csv files from prometheus metrics
+This will start:
+- **Prometheus** on port `9090`
+- **Node Exporter** for system metrics
 
+### Exporting CSV Data
+
+Generate CSV files from Prometheus metrics:
+
+```bash
+python3 export_csv.py <prometheus_url> <start_date> <end_date> [custom_metrics_file]
 ```
-python3 export_csv.py <prometheus_url> <dateStart RFC 3339 | unix_timestamp> <dateEnd RFC 3339 | unix_timestamp> <custom_metrics_file_name>
-```
 
-Example of usage:
+**Parameters:**
+- `prometheus_url`: URL of your Prometheus instance
+- `start_date`: Start date in RFC 3339 format or Unix timestamp
+- `end_date`: End date in RFC 3339 format or Unix timestamp  
+- `custom_metrics_file`: (Optional) Custom metrics file name
 
-```
-python3 export_csv.py http://localhost:9090 2022-12-14T10:00:00Z 2022-12-14T11:30:00Z metrics.txt
-```
+**Output:** A new directory `csv/metrics_YYYY-MM-DD-HH:MM:SS` containing CSV files
 
-A new directory named csv/metrics_%Y-%m-%d-%H:%M:%S with the csv files will be generated.
+### Generating PDF Reports
 
-### Create a pdf report with plots from csv files
+Create a PDF report with plots from CSV files:
 
-```
+```bash
 python3 plot.py <csv_directory>
 ```
 
-Example of usage:
+**Parameters:**
+- `csv_directory`: Path to the directory containing CSV files
 
-```
-python3 plot.py csv/metrics_2022-12-14_11:20:20
+**Output:** A `report.pdf` file in the specified CSV directory
+
+## Examples
+
+### Basic Usage
+
+```bash
+# Export metrics for the last hour
+python3 export_csv.py http://localhost:9090 2023-12-14T10:00:00Z 2023-12-14T11:00:00Z
+
+# Generate PDF report from exported data
+python3 plot.py csv/metrics_2023-12-14-11:20:20
 ```
 
-A new pdf file *report.pdf* will be generated in directory csv/metrics_%Y-%m-%d-%H:%M:%S
+### Using Custom Metrics
+
+```bash
+# Export with custom metrics file
+python3 export_csv.py http://localhost:9090 2023-12-14T10:00:00Z 2023-12-14T11:00:00Z metrics_haproxy.txt
+```
+
+### Using Unix Timestamps
+
+```bash
+# Using Unix timestamps instead of RFC 3339
+python3 export_csv.py http://localhost:9090 1702554000 1702557600 metrics.txt
+```
+
+## Docker Usage
+
+### Building and Running
+
+```bash
+# Build the image
+docker build -t prometheus-csvplot .
+
+# Run with Docker Compose
+docker-compose up -d
+
+# Run the export script
+docker run --rm -v $(pwd)/csv:/app/csv prometheus-csvplot python3 export_csv.py http://prometheus:9090 2023-12-14T10:00:00Z 2023-12-14T11:00:00Z
+```
 
 ## Teardown
 
-```
+Stop and remove all containers and volumes:
+
+```bash
 docker-compose down --volumes
 ```
+
+## License
+
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
